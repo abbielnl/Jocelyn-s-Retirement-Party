@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jocelyn Murimi Kimemba Kirimi — A Life of Service</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(160deg, var(--terracotta-dark) 0%, var(--terracotta) 45%, var(--gold) 100%);
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-inner { position: relative; max-width: 800px; }
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  display: block;
+  font-size: 0.7em;
+  opacity: 0.9;
+}
+
+.hero-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.hero-scroll::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.4);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ─── COUNTDOWNS ─── */
+.countdowns-wrap {
+  background: var(--warm-white);
+  border-bottom: 1px solid var(--border);
+}
+
+.countdowns-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.countdown-card {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+
+.countdown-card.retirement::before { background: linear-gradient(90deg, var(--terracotta), var(--gold)); }
+.countdown-card.party::before { background: linear-gradient(90deg, var(--sage), var(--sage-light)); }
+
+.countdown-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.countdown-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.25rem;
+}
+
+.countdown-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.countdown-units {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.countdown-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  line-height: 1;
+  min-width: 52px;
+  text-align: center;
+}
+
+.countdown-card.party .countdown-number { color: var(--sage); }
+
+.countdown-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.countdown-colon {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--text-muted);
+  line-height: 1;
+  opacity: 0.4;
+  align-self: flex-start;
+  padding-top: 0.2rem;
+}
+
+/* ─── PHOTO + BIO ─── */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.intro-photo-stack {
+  position: relative;
+}
+
+.photo-main {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.photo-accent {
+  position: absolute;
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  bottom: -1.5rem;
+  right: -1.5rem;
+  object-fit: cover;
+  border: 4px solid var(--warm-white);
+}
+
+.intro-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--terracotta-dark);
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  border-left: 3px solid var(--gold);
+}
+
+.intro-text {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+/* PLACEHOLDER for custom bio text */
+.bio-placeholder {
+  background: var(--gold-pale);
+  border: 2px dashed var(--gold);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--brown-light);
+  font-style: italic;
+  font-family: 'Lora', serif;
+}
+
+/* ─── TIMELINE ─── */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.65rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--terracotta), var(--gold), var(--sage));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-dot {
+  position: absolute;
+  left: -2.5rem;
+  top: 0.35rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  border: 3px solid var(--warm-white);
+  box-shadow: 0 0 0 2px var(--terracotta);
+}
+
+.timeline-year {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--terracotta);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+}
+
+.timeline-body {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  line-height: 1.7;
+}
+
+.timeline-placeholder {
+  background: var(--gold-pale);
+  border: 2px dashed var(--gold);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: var(--brown-light);
+  font-style: italic;
+  font-family: 'Lora', serif;
+}
+
+/* ─── PHOTOS STRIP ─── */
+.photos-section { background: var(--brown-pale); }
+
+.photos-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.photo-strip-item {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ─── NAV PAGES ─── */
+.nav-pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.nav-page-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: block;
+}
+
+.nav-page-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px var(--shadow);
+  border-color: var(--terracotta-light);
+}
+
+.nav-page-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.nav-page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.4rem;
+}
+
+.nav-page-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .intro-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .photos-strip { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-brand">Jocelyn M.K. Kirimi</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="rsvp.html">RSVP</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">✦ Celebrating a Legacy ✦</div>
+    <h1>
+      Jocelyn Murimi<br>Kimemba Kirimi
+      <em>A lifetime of shaping hearts & minds</em>
+    </h1>
+    <p class="hero-tagline">
+      Educator. Mentor. Guide. Geography & R.E. Teacher.<br>
+      Guidance Counsellor. Mother. Legend.
+    </p>
+    <div class="hero-cta">
+      <a href="rsvp.html" class="btn btn-primary">RSVP to the Party →</a>
+      <a href="messages.html" class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,0.6);">Leave a Message</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ─── COUNTDOWNS ─── -->
+<div class="countdowns-wrap">
+  <div class="countdowns-grid">
+    <div class="countdown-card retirement">
+      <div class="countdown-icon">🎓</div>
+      <div class="countdown-title">Retirement Day</div>
+      <div class="countdown-date">Wednesday, 25th June 2026</div>
+      <div class="countdown-units">
+        <div class="countdown-unit">
+          <div class="countdown-number" id="r-days">—</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="r-hours">—</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="r-mins">—</div>
+          <div class="countdown-label">Mins</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="r-secs">—</div>
+          <div class="countdown-label">Secs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="countdown-card party">
+      <div class="countdown-icon">🎉</div>
+      <div class="countdown-title">The Celebration Party</div>
+      <div class="countdown-date">Saturday, 4th July 2026</div>
+      <div class="countdown-units">
+        <div class="countdown-unit">
+          <div class="countdown-number" id="p-days">—</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="p-hours">—</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="p-mins">—</div>
+          <div class="countdown-label">Mins</div>
+        </div>
+        <div class="countdown-colon">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-number" id="p-secs">—</div>
+          <div class="countdown-label">Secs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── INTRO / BIO ─── -->
+<section class="section">
+  <div class="intro-grid">
+    <div class="intro-photo-stack">
+      <img src="mum_solo_photo.jpg" class="photo-main" alt="Jocelyn Murimi Kimemba Kirimi" style="width:100%;aspect-ratio:3/4;border-radius:20px;object-fit:cover;" />
+      <img src="mum_and_dad.jpg" class="photo-accent" alt="Jocelyn and her husband" style="position:absolute;bottom:-1.5rem;right:-1.5rem;width:55%;aspect-ratio:1;border-radius:16px;object-fit:cover;border:4px solid var(--warm-white);" />
+    </div>
+
+    <div>
+      <p class="intro-quote">"She never planned to teach — but teaching was always her calling."</p>
+
+      <p class="intro-text">
+        Today we celebrate Jocelyn Murimi Kimemba Kirimi — a woman whose life has been a quiet, powerful testament to love, service, and sacrifice. She did not set out to be a teacher. Teaching found her, and she fell in love with it — and from that moment, she gave it everything she had.
+      </p>
+      <p class="intro-text">
+        Today I celebrate you and the incredible woman you are. Thank you for the many sacrifices you have made for our family, for the countless prayers you have lifted on our behalf, and for the love and guidance that continue to shape our lives every day. Your strength, patience, and faith have been a pillar for all of us.
+      </p>
+      <p class="intro-text">
+        As a teacher, you have moulded young minds and inspired so many to believe in themselves. As a mother and grandmother, you have nurtured generations with wisdom, warmth, and unconditional love. As a wife, you have served with humility, compassion, and devotion. Your life is truly a blessing to everyone who knows you.
+      </p>
+      <p class="intro-text">
+        Beyond the classroom, Jocelyn has always gone further — reaching into her own pocket and heart to support students facing hardship, whether struggling with school fees, family difficulties, or personal battles. No student was ever too broken, too poor, or too lost for her to help. She never asked about their background. She simply showed up — selflessly, consistently, and with grace.
+      </p>
+
+      <a href="gallery.html" class="btn btn-primary">View Photo Gallery →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── JOURNEY / TIMELINE ─── -->
+<section class="section" style="background:var(--warm-white);max-width:100%">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <h2 class="section-title">Her Journey in Education</h2>
+    <p class="section-subtitle">Decades of dedication, one chapter at a time</p>
+    <div class="divider"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">The Beginning</div>
+          <div class="timeline-heading">Matungulu Girls' High School</div>
+          <div class="timeline-body">Teaching came calling, and Jocelyn answered. She joined Matungulu Girls' High School where she taught Geography and Religious Education for 6 formative years — discovering along the way that shaping young lives was not just a job, but her true purpose.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--gold)"></div>
+          <div class="timeline-year" style="color:var(--gold)">18 Years</div>
+          <div class="timeline-heading">Tala Boys' High School</div>
+          <div class="timeline-body">Her longest and most defining chapter. For 18 remarkable years at Tala Boys', Jocelyn poured herself into her students — teaching, mentoring, and quietly changing the trajectories of countless young men. She became a fixture of the school's soul.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--sage)"></div>
+          <div class="timeline-year" style="color:var(--sage)">Post-COVID</div>
+          <div class="timeline-heading">Guidance & Counselling — A New Calling</div>
+          <div class="timeline-body">When the world was shaken by the COVID-19 pandemic and students returned to school carrying invisible wounds, Jocelyn stepped forward. She took on the role of Guidance Counsellor — becoming a safe harbour for students navigating trauma, family hardship, and personal struggles. True to her nature, she also went beyond her role, quietly helping students in need of school fees or any support she could offer.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--terracotta);box-shadow:0 0 0 4px rgba(193,89,58,0.2)"></div>
+          <div class="timeline-year">25 June 2026</div>
+          <div class="timeline-heading" style="color:var(--terracotta-dark)">A Well-Deserved Retirement 🎓</div>
+          <div class="timeline-body">After years of tireless service, Jocelyn takes her final bow from the classroom — carrying the gratitude of every student she has ever touched.</div>
+        </div>
+
+      </div>
+
+      <div>
+        <div style="background:var(--gold-pale);border-radius:20px;padding:2rem;margin-bottom:1.5rem">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--brown);margin-bottom:1rem;font-size:1.2rem">Subjects & Specialties</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+            <span style="background:var(--terracotta);color:white;padding:0.4rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:600">Geography</span>
+            <span style="background:var(--sage);color:white;padding:0.4rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:600">Religious Education</span>
+            <span style="background:var(--gold);color:var(--brown);padding:0.4rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:600">Guidance & Counselling</span>
+          </div>
+        </div>
+
+        <img src="mum_with_students_1.jpg" alt="Jocelyn teaching in the classroom" style="width:100%;height:280px;object-fit:cover;border-radius:16px;" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PHOTOS STRIP ─── -->
+<section class="section photos-section" style="max-width:100%">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <h2 class="section-title">Moments & Memories</h2>
+    <p class="section-subtitle">A few glimpses through the years</p>
+    <div class="divider"></div>
+    <div class="photos-strip">
+      <div class="photo-strip-item">
+        <img src="mum_graduation_1.jpg" alt="Graduation day" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+      </div>
+      <div class="photo-strip-item">
+        <img src="mum_with_students_5.jpg" alt="With students outdoors" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+      </div>
+      <div class="photo-strip-item">
+        <img src="mum_on_vacation.jpg" alt="Jocelyn on vacation" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+      </div>
+      <div class="photo-strip-item">
+        <img src="mum_with_her_kids_and_randkid.jpg" alt="With family" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <a href="gallery.html" class="btn btn-primary">See Full Photo Album →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── QUICK NAVIGATION ─── -->
+<section class="section">
+  <h2 class="section-title" style="text-align:center">Explore the Celebration</h2>
+  <p class="section-subtitle" style="text-align:center;margin-bottom:2.5rem">Everything in one place</p>
+  <div class="nav-pages">
+    <a href="gallery.html" class="nav-page-card">
+      <div class="nav-page-icon">🖼️</div>
+      <div class="nav-page-title">Photo Album</div>
+      <div class="nav-page-desc">Browse all our favourite memories and moments</div>
+    </a>
+    <a href="messages.html" class="nav-page-card">
+      <div class="nav-page-icon">💌</div>
+      <div class="nav-page-title">Messages & Quotes</div>
+      <div class="nav-page-desc">Leave a heartfelt message or read tributes from loved ones</div>
+    </a>
+    <a href="rsvp.html" class="nav-page-card">
+      <div class="nav-page-icon">🎟️</div>
+      <div class="nav-page-title">RSVP</div>
+      <div class="nav-page-desc">Confirm your spot at the celebration party on 4th July</div>
+    </a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>Celebrating <span>Jocelyn Murimi Kimemba Kirimi</span> — a life beautifully lived in service to others.</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.8rem">Retirement · 25 June 2026 &nbsp;|&nbsp; Celebration Party · 4 July 2026</p>
+</footer>
+
+<script>
+function countdown(targetDate, dIds, hIds, mIds, sIds) {
+  function tick() {
+    const now = new Date();
+    const diff = new Date(targetDate) - now;
+    if (diff <= 0) {
+      document.getElementById(dIds).textContent = '0';
+      document.getElementById(hIds).textContent = '00';
+      document.getElementById(mIds).textContent = '00';
+      document.getElementById(sIds).textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById(dIds).textContent = d;
+    document.getElementById(hIds).textContent = String(h).padStart(2,'0');
+    document.getElementById(mIds).textContent = String(m).padStart(2,'0');
+    document.getElementById(sIds).textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+countdown('2026-06-25T00:00:00', 'r-days','r-hours','r-mins','r-secs');
+countdown('2026-07-04T00:00:00', 'p-days','p-hours','p-mins','p-secs');
+</script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RSVP — Jocelyn's Celebration Party</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ─── PARTY INFO BANNER ─── */
+.party-banner {
+  background: var(--warm-white);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem;
+}
+
+.party-details {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.party-detail-item {
+  text-align: center;
+  padding: 1.25rem;
+  background: var(--cream);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.party-detail-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.party-detail-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.party-detail-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--terracotta-dark);
+  font-weight: 600;
+}
+
+.party-detail-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+/* ─── RSVP FORM ─── */
+.rsvp-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.rsvp-form-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 8px 40px var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.rsvp-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--terracotta), var(--gold), var(--sage));
+}
+
+.rsvp-form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.25rem;
+}
+
+.rsvp-form-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 2rem;
+}
+
+/* Form elements */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text-dark);
+  background: var(--cream);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(193,89,58,0.1);
+}
+
+.form-group textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* RSVP Attendance Toggle */
+.attendance-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.attendance-option {
+  position: relative;
+}
+
+.attendance-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+.attendance-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.25rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  background: var(--cream);
+}
+
+.attendance-label:hover {
+  border-color: var(--terracotta-light);
+}
+
+.attendance-option input:checked + .attendance-label {
+  border-color: var(--terracotta);
+  background: var(--gold-pale);
+}
+
+.attendance-option.decline input:checked + .attendance-label {
+  border-color: var(--sage);
+  background: var(--sage-pale);
+}
+
+.attendance-emoji { font-size: 2rem; }
+
+.attendance-text {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.attendance-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+/* ─── DIETARY ─── */
+.dietary-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dietary-checks label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  transition: all 0.2s;
+  background: var(--cream);
+}
+
+.dietary-checks input[type="checkbox"] {
+  accent-color: var(--terracotta);
+}
+
+.dietary-checks label:has(input:checked) {
+  border-color: var(--terracotta);
+  background: var(--gold-pale);
+  color: var(--terracotta-dark);
+}
+
+/* ─── SUBMIT BUTTON ─── */
+.rsvp-submit-row {
+  margin-top: 1.75rem;
+  text-align: center;
+}
+
+.rsvp-submit-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.05rem;
+  border-radius: 14px;
+}
+
+/* ─── SUCCESS STATE ─── */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.success-screen.show { display: block; }
+
+.success-circle {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, var(--terracotta), var(--gold));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 1.5rem;
+}
+
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.5rem;
+}
+
+.success-msg {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 400px;
+  margin: 0 auto 2rem;
+}
+
+/* ─── TOAST ─── */
+.toast {
+  display: none;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+.toast.error { background: #FDECEA; color: #B91C1C; border: 1px solid #FECACA; }
+
+/* ─── SETUP NOTE ─── */
+.setup-note {
+  background: var(--gold-pale);
+  border: 2px dashed var(--gold);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 0 auto 2rem;
+  max-width: 680px;
+  font-size: 0.85rem;
+  color: var(--brown-light);
+  font-family: 'Lora', serif;
+}
+.setup-note strong { color: var(--brown); }
+.setup-note code { background: rgba(212,165,53,0.2); padding: 0.1rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: var(--brown); }
+
+@media (max-width: 600px) {
+  .rsvp-form-card { padding: 1.5rem; }
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Jocelyn M.K. Kirimi</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="rsvp.html" class="active">RSVP</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <h1>You're Invited 🎉</h1>
+  <p>Join us in celebrating Jocelyn's retirement</p>
+</div>
+
+<!-- ─── PARTY INFO ─── -->
+<div class="party-banner">
+  <div class="party-details">
+    <div class="party-detail-item">
+      <div class="party-detail-icon">📅</div>
+      <div class="party-detail-label">Date</div>
+      <div class="party-detail-value">Saturday</div>
+      <div class="party-detail-sub">4th July 2026</div>
+    </div>
+    <div class="party-detail-item">
+      <div class="party-detail-icon">🕐</div>
+      <div class="party-detail-label">Time</div>
+      <div class="party-detail-value" style="font-size:0.85rem">To be communicated</div>
+      <div class="party-detail-sub">Details coming soon</div>
+    </div>
+    <div class="party-detail-item">
+      <div class="party-detail-icon">📍</div>
+      <div class="party-detail-label">Venue</div>
+      <div class="party-detail-value" style="font-size:0.85rem">To be communicated</div>
+      <div class="party-detail-sub">Details coming soon</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── RSVP FORM ─── -->
+<section class="section">
+  <div class="rsvp-wrapper">
+
+
+
+    <div class="rsvp-form-card" id="rsvpFormCard">
+      <div class="rsvp-form-title">Reserve Your Seat</div>
+      <p class="rsvp-form-sub">Kindly RSVP at your earliest convenience</p>
+
+      <!-- Attendance -->
+      <div style="margin-bottom:1.5rem">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text-mid);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem">Will you be attending? *</div>
+        <div class="attendance-toggle">
+          <div class="attendance-option">
+            <input type="radio" name="attendance" id="att-yes" value="yes" checked />
+            <label class="attendance-label" for="att-yes">
+              <span class="attendance-emoji">🎉</span>
+              <span class="attendance-text">Yes, I'll be there!</span>
+              <span class="attendance-sub">Joyfully attending</span>
+            </label>
+          </div>
+          <div class="attendance-option decline">
+            <input type="radio" name="attendance" id="att-no" value="no" />
+            <label class="attendance-label" for="att-no">
+              <span class="attendance-emoji">😔</span>
+              <span class="attendance-text">Regrettably unable</span>
+              <span class="attendance-sub">I'll be there in spirit</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Name + Email -->
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="rsvpName" placeholder="Your full name" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label>Phone / Email</label>
+          <input type="text" id="rsvpContact" placeholder="For confirmation" maxlength="80" />
+        </div>
+      </div>
+
+      <!-- Guests -->
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Number of Adults</label>
+          <select id="rsvpAdults">
+            <option value="1">1 Adult</option>
+            <option value="2">2 Adults</option>
+            <option value="3">3 Adults</option>
+            <option value="4">4 Adults</option>
+            <option value="5+">5+ Adults</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Number of Children</label>
+          <select id="rsvpChildren">
+            <option value="0">No children</option>
+            <option value="1">1 Child</option>
+            <option value="2">2 Children</option>
+            <option value="3">3 Children</option>
+            <option value="4+">4+ Children</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dietary -->
+      <div class="form-group">
+        <label>Dietary Requirements</label>
+        <div class="dietary-checks">
+          <label><input type="checkbox" id="d-none" value="none"> No restrictions</label>
+          <label><input type="checkbox" id="d-veg" value="vegetarian"> Vegetarian</label>
+          <label><input type="checkbox" id="d-vegan" value="vegan"> Vegan</label>
+          <label><input type="checkbox" id="d-gf" value="gluten-free"> Gluten-free</label>
+          <label><input type="checkbox" id="d-halal" value="halal"> Halal</label>
+          <label><input type="checkbox" id="d-other" value="other"> Other</label>
+        </div>
+      </div>
+
+      <!-- Message to Jocelyn -->
+      <div class="form-group">
+        <label>A word for Jocelyn (optional)</label>
+        <textarea id="rsvpNote" placeholder="A short message or well-wish to include with your RSVP…" maxlength="300"></textarea>
+      </div>
+
+      <!-- Relationship -->
+      <div class="form-group">
+        <label>Your Connection to Jocelyn</label>
+        <select id="rsvpRelation">
+          <option value="family">Family</option>
+          <option value="colleague">Colleague / Teacher</option>
+          <option value="former-student">Former Student</option>
+          <option value="friend">Friend</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="rsvp-submit-row">
+        <button class="btn btn-gold rsvp-submit-btn" onclick="submitRSVP()">Confirm My RSVP ✦</button>
+        <div class="toast" id="rsvpToast"></div>
+      </div>
+    </div>
+
+    <!-- Success state -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-circle">🎉</div>
+      <div class="success-title">You're on the list!</div>
+      <p class="success-msg" id="successMsg">
+        Thank you for responding. We look forward to celebrating with you on 4th July!
+      </p>
+      <a href="messages.html" class="btn btn-primary">Leave a Message for Jocelyn →</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>Celebrating <span>Jocelyn Murimi Kimemba Kirimi</span> — a life beautifully lived in service to others.</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.8rem">Retirement · 25 June 2026 &nbsp;|&nbsp; Celebration Party · 4 July 2026</p>
+</footer>
+
+<script>
+// ╔══════════════════════════════════════════════════════════╗
+// ║  REPLACE THESE TWO VALUES WITH YOUR JSONBIN CREDENTIALS  ║
+const RSVP_BIN_ID     = '6a229007da38895dfe8b41a0';
+const RSVP_MASTER_KEY = '$2a$10$l9sP.C02gGu0BoE4HZaFZegQZQNvNDQ7SDmf8zfNCoHtfU6B1Ipbe';
+// ╚══════════════════════════════════════════════════════════╝
+
+const RSVP_API = `https://api.jsonbin.io/v3/b/${RSVP_BIN_ID}`;
+const RSVP_HEADERS = { 'Content-Type': 'application/json', 'X-Master-Key': RSVP_MASTER_KEY };
+
+function getDietary() {
+  const vals = [];
+  ['d-none','d-veg','d-vegan','d-gf','d-halal','d-other'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.checked) vals.push(el.value);
+  });
+  return vals.join(', ') || 'None specified';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('rsvpToast');
+  t.className = 'toast error';
+  t.textContent = msg;
+  t.style.display = 'block';
+}
+
+async function submitRSVP() {
+  const name       = document.getElementById('rsvpName').value.trim();
+  const contact    = document.getElementById('rsvpContact').value.trim();
+  const adults     = document.getElementById('rsvpAdults').value;
+  const children   = document.getElementById('rsvpChildren').value;
+  const attendance = document.querySelector('input[name="attendance"]:checked').value;
+  const note       = document.getElementById('rsvpNote').value.trim();
+  const relation   = document.getElementById('rsvpRelation').value;
+  const dietary    = getDietary();
+
+  if (!name) { showToast('Please enter your full name.'); return; }
+
+  if (false) {
+    showToast('Please set up your JSONBin credentials first (see setup note).'); return;
+  }
+
+  const btn = document.querySelector('.rsvp-submit-btn');
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  try {
+    const getRes = await fetch(RSVP_API + '/latest', { headers: RSVP_HEADERS });
+    const getData = await getRes.json();
+    const rsvps = getData.record.rsvps || [];
+
+    rsvps.push({ name, contact, attendance, adults, children, dietary, relation, note, date: new Date().toISOString() });
+
+    await fetch(RSVP_API, {
+      method: 'PUT',
+      headers: RSVP_HEADERS,
+      body: JSON.stringify({ rsvps })
+    });
+
+    document.getElementById('rsvpFormCard').style.display = 'none';
+    const ss = document.getElementById('successScreen');
+    ss.classList.add('show');
+    if (attendance === 'no') {
+      document.getElementById('successMsg').textContent =
+        'Thank you for letting us know, ' + name + '. You\'ll be missed, but we\'ll celebrate knowing you\'re with us in spirit!';
+    } else {
+      document.getElementById('successMsg').textContent =
+        'Thank you, ' + name + '! We can\'t wait to celebrate with you on 4th July. More details to follow!';
+    }
+
+  } catch(e) {
+    showToast('Something went wrong. Please try again.');
+    btn.textContent = 'Confirm My RSVP ✦';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

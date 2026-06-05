@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Messages — Jocelyn Murimi Kimemba Kirimi</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ─── COMPOSE FORM ─── */
+.compose-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 24px var(--shadow);
+  max-width: 680px;
+  margin: 0 auto 3rem;
+}
+
+.compose-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.25rem;
+}
+
+.compose-card p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  background: var(--cream);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--terracotta);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.char-count {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.submit-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+/* ─── SUCCESS / ERROR ─── */
+.toast {
+  display: none;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.toast.success {
+  background: var(--sage-pale);
+  color: var(--sage);
+  border: 1px solid var(--sage-light);
+}
+
+.toast.error {
+  background: #FDECEA;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+
+/* ─── MESSAGES FEED ─── */
+.messages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.messages-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+.messages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ─── MESSAGE CARD ─── */
+.msg-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  position: relative;
+  transition: box-shadow 0.25s, transform 0.25s;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.msg-card:hover {
+  box-shadow: 0 8px 30px var(--shadow);
+  transform: translateY(-3px);
+}
+
+.msg-card::before {
+  content: '"';
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  color: var(--gold-light);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.msg-relationship-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.badge-family    { background: #FEF3C7; color: #92400E; }
+.badge-colleague { background: var(--sage-pale); color: var(--sage); }
+.badge-student   { background: var(--gold-pale); color: var(--brown); }
+.badge-friend    { background: #FCE7F3; color: #9D174D; }
+.badge-other     { background: var(--brown-pale); color: var(--brown-light); }
+
+.msg-text {
+  font-family: 'Lora', serif;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  line-height: 1.75;
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.msg-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.msg-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--terracotta), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.msg-author-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.msg-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+/* ─── LOADING / EMPTY ─── */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+
+.empty-state .emoji { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state p { font-family: 'Lora', serif; font-style: italic; }
+
+/* ─── SETUP NOTE ─── */
+.setup-note {
+  background: var(--gold-pale);
+  border: 2px dashed var(--gold);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 0 auto 2rem;
+  max-width: 680px;
+  font-size: 0.85rem;
+  color: var(--brown-light);
+  font-family: 'Lora', serif;
+}
+
+.setup-note strong { color: var(--brown); }
+.setup-note code { background: rgba(212,165,53,0.2); padding: 0.1rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: var(--brown); }
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .compose-card { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Jocelyn M.K. Kirimi</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="messages.html" class="active">Messages</a></li>
+    <li><a href="rsvp.html">RSVP</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <h1>Messages of Love</h1>
+  <p>Quotes, wishes & tributes from those who know her best</p>
+</div>
+
+<section class="section">
+
+  <!-- SETUP NOTE -->
+
+
+  <!-- COMPOSE FORM -->
+  <div class="compose-card">
+    <h3>Leave a Message for Jocelyn ✨</h3>
+    <p>Share a memory, a word of gratitude, or a heartfelt wish</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="authorName" placeholder="e.g. Mary Wanjiku" maxlength="60" />
+      </div>
+      <div class="form-group">
+        <label>Your Relationship</label>
+        <select id="relationship">
+          <option value="family">Family</option>
+          <option value="colleague">Colleague / Teacher</option>
+          <option value="student">Former Student</option>
+          <option value="friend">Friend</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:0.5rem">
+      <label>Your Message *</label>
+      <textarea id="msgText" placeholder="Write your heartfelt message, favourite memory, or tribute here…" maxlength="500" oninput="document.getElementById('charCount').textContent=this.value.length"></textarea>
+      <div class="char-count"><span id="charCount">0</span> / 500</div>
+    </div>
+
+    <div class="submit-row">
+      <span class="submit-note">Your message will appear publicly on this page</span>
+      <button class="btn btn-primary" onclick="submitMessage()">Post Message ✦</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <!-- MESSAGES FEED -->
+  <div class="messages-header">
+    <h2 class="section-title" style="margin-bottom:0">Messages of Love</h2>
+    <span class="messages-count" id="msgCount">Loading…</span>
+  </div>
+
+  <div id="messagesContainer">
+    <div class="loading-spinner">Loading messages… 💌</div>
+  </div>
+
+</section>
+
+<footer>
+  <p>Celebrating <span>Jocelyn Murimi Kimemba Kirimi</span> — a life beautifully lived in service to others.</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.8rem">Retirement · 25 June 2026 &nbsp;|&nbsp; Celebration Party · 4 July 2026</p>
+</footer>
+
+<script>
+// ╔══════════════════════════════════════════════════════════╗
+// ║  REPLACE THESE TWO VALUES WITH YOUR JSONBIN CREDENTIALS  ║
+const BIN_ID     = '6a228fe0f5f4af5e29bcc8b4';
+const MASTER_KEY = '$2a$10$l9sP.C02gGu0BoE4HZaFZegQZQNvNDQ7SDmf8zfNCoHtfU6B1Ipbe';
+// ╚══════════════════════════════════════════════════════════╝
+
+const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Master-Key': MASTER_KEY
+};
+
+const badgeMap = {
+  family:    { cls: 'badge-family',    icon: '❤️', label: 'Family' },
+  colleague: { cls: 'badge-colleague', icon: '🏫', label: 'Colleague' },
+  student:   { cls: 'badge-student',   icon: '📚', label: 'Former Student' },
+  friend:    { cls: 'badge-friend',    icon: '🌸', label: 'Friend' },
+  other:     { cls: 'badge-other',     icon: '✨', label: 'Guest' }
+};
+
+function initials(name) {
+  return name.trim().split(' ').slice(0,2).map(w => w[0].toUpperCase()).join('');
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+}
+
+function renderMessages(messages) {
+  const container = document.getElementById('messagesContainer');
+  document.getElementById('msgCount').textContent = `${messages.length} message${messages.length !== 1 ? 's' : ''}`;
+
+  if (!messages.length) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">💌</div><p>No messages yet — be the first to leave one!</p></div>`;
+    return;
+  }
+
+  const sorted = [...messages].reverse();
+  container.innerHTML = `<div class="messages-grid">${sorted.map(m => {
+    const b = badgeMap[m.relationship] || badgeMap.other;
+    return `
+    <div class="msg-card">
+      <span class="msg-relationship-badge ${b.cls}">${b.icon} ${b.label}</span>
+      <p class="msg-text">${escapeHtml(m.text)}</p>
+      <div class="msg-author">
+        <div class="msg-avatar">${initials(m.author)}</div>
+        <div>
+          <div class="msg-author-name">${escapeHtml(m.author)}</div>
+          <div class="msg-date">${formatDate(m.date)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 5000);
+}
+
+async function loadMessages() {
+  if (false) {
+    document.getElementById('messagesContainer').innerHTML = `<div class="empty-state"><div class="emoji">⚙️</div><p>Connect a JSONBin account to enable live messages (see setup note above).</p></div>`;
+    document.getElementById('msgCount').textContent = '';
+    return;
+  }
+  try {
+    const res = await fetch(API_URL + '/latest', { headers: HEADERS });
+    const data = await res.json();
+    renderMessages(data.record.messages || []);
+  } catch(e) {
+    document.getElementById('messagesContainer').innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><p>Could not load messages. Check your JSONBin credentials.</p></div>`;
+    document.getElementById('msgCount').textContent = '';
+  }
+}
+
+async function submitMessage() {
+  const author = document.getElementById('authorName').value.trim();
+  const text   = document.getElementById('msgText').value.trim();
+  const rel    = document.getElementById('relationship').value;
+
+  if (!author) { showToast('error', 'Please enter your name.'); return; }
+  if (!text || text.length < 5) { showToast('error', 'Please write a message of at least 5 characters.'); return; }
+
+  if (false) {
+    showToast('error', 'Please set up your JSONBin credentials first (see setup note).'); return;
+  }
+
+  const btn = document.querySelector('.compose-card .btn');
+  btn.textContent = 'Posting…';
+  btn.disabled = true;
+
+  try {
+    // fetch current messages
+    const getRes = await fetch(API_URL + '/latest', { headers: HEADERS });
+    const getData = await getRes.json();
+    const messages = getData.record.messages || [];
+
+    // append new message
+    messages.push({ author, text, relationship: rel, date: new Date().toISOString() });
+
+    // save back
+    await fetch(API_URL, {
+      method: 'PUT',
+      headers: HEADERS,
+      body: JSON.stringify({ messages })
+    });
+
+    document.getElementById('authorName').value = '';
+    document.getElementById('msgText').value = '';
+    document.getElementById('charCount').textContent = '0';
+    showToast('success', '✨ Your message has been posted! Thank you.');
+    renderMessages(messages);
+  } catch(e) {
+    showToast('error', 'Something went wrong. Please try again.');
+  } finally {
+    btn.textContent = 'Post Message ✦';
+    btn.disabled = false;
+  }
+}
+
+loadMessages();
+</script>
+</body>
+</html>

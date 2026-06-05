@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gallery — Jocelyn Murimi Kimemba Kirimi</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2.5rem 0 2rem;
+}
+.filter-tab {
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  border: 1.5px solid var(--border);
+  background: var(--warm-white);
+  color: var(--text-mid);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Nunito', sans-serif;
+}
+.filter-tab:hover, .filter-tab.active {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: white;
+}
+
+/* Masonry */
+.gallery-grid {
+  columns: 3;
+  column-gap: 1rem;
+  padding: 0 2rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s;
+}
+.gallery-item:hover { transform: scale(1.02); }
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-item img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  object-fit: cover;
+}
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(92,61,46,0.85) 0%, transparent 55%);
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+}
+.gallery-overlay-text {
+  color: white;
+  font-family: 'Lora', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* Album headings */
+.album-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.album-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.album-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20,10,5,0.95);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  flex-direction: column;
+}
+.lightbox.open { display: flex; }
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  display: block;
+  object-fit: contain;
+}
+.lightbox-close {
+  position: fixed;
+  top: 1.5rem; right: 1.5rem;
+  background: rgba(255,255,255,0.15);
+  border: none; color: white;
+  font-size: 1.5rem; cursor: pointer;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.3); }
+.lightbox-caption {
+  margin-top: 1rem; text-align: center;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Lora', serif; font-style: italic; font-size: 0.95rem;
+}
+.lightbox-nav {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.15);
+  border: none; color: white; font-size: 1.5rem; cursor: pointer;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+.lightbox-prev { left: 1.5rem; }
+.lightbox-next { right: 1.5rem; }
+
+@media (max-width: 900px) { .gallery-grid { columns: 2; } }
+@media (max-width: 500px) { .gallery-grid { columns: 1; padding: 0 1rem 2rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Jocelyn M.K. Kirimi</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="rsvp.html">RSVP</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-header">
+  <h1>Photo Album</h1>
+  <p>A lifetime of moments, captured with love</p>
+</div>
+
+<!-- Filter tabs -->
+<div class="album-section">
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterAlbum('all', this)">All Photos</button>
+    <button class="filter-tab" onclick="filterAlbum('family', this)">Family</button>
+    <button class="filter-tab" onclick="filterAlbum('graduation', this)">Graduation</button>
+    <button class="filter-tab" onclick="filterAlbum('students', this)">With Students</button>
+    <button class="filter-tab" onclick="filterAlbum('personal', this)">Personal</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FAMILY
+════════════════════════════════════════ -->
+<div class="album-section album-heading" data-album="family" style="margin-bottom:1.5rem">
+  <div class="album-title">❤️ Family</div>
+</div>
+<div class="gallery-grid" data-album="family">
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_and_dad.jpg" alt="Jocelyn and her husband" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Jocelyn & her husband — a partnership built on love and faith</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_her_kids_and_randkid.jpg" alt="Jocelyn with her children and grandchild" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">The joy of family — with her children and grandchild</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_siblings.jpg" alt="Jocelyn with her siblings" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">With her siblings — roots that hold her strong</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_siblings_2.jpg" alt="Jocelyn with siblings and family outdoors" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">A family gathering full of laughter and love</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="young_mum.jpg" alt="A young Jocelyn with her child" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Young Jocelyn — a mother's love from the very beginning</div></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     GRADUATION
+════════════════════════════════════════ -->
+<div class="album-section album-heading" data-album="graduation" style="margin-bottom:1.5rem; margin-top:2rem">
+  <div class="album-title">🎓 Graduation</div>
+</div>
+<div class="gallery-grid" data-album="graduation">
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_graduation_1.jpg" alt="Jocelyn at her graduation at Pan Africa Christian University" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Graduation day at Pan Africa Christian University — a proud moment with family</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_graduation_2.jpg" alt="Jocelyn with fellow graduates in caps and gowns" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Celebrating with fellow graduates — she never stopped learning</div></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     WITH STUDENTS
+════════════════════════════════════════ -->
+<div class="album-section album-heading" data-album="students" style="margin-bottom:1.5rem; margin-top:2rem">
+  <div class="album-title">📚 With Students</div>
+</div>
+<div class="gallery-grid" data-album="students">
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_1.jpg" alt="Jocelyn teaching R.E. in the classroom at Eastleigh High School" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">In her element — teaching Religious Education at Eastleigh High School</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_2.jpg" alt="Jocelyn in a classroom counselling session with students" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">A counselling session — listening and guiding young minds</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_3.jpg" alt="Jocelyn leading a large school assembly" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Leading a school assembly — a voice of authority and warmth</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_4.jpg" alt="Jocelyn at KSCF summit with students" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">KSCF Christian Teachers & Chaplains Empowerment Summit</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_5.jpg" alt="Jocelyn posing with a large group of students outdoors" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">A school outing — surrounded by the students she poured into</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_6.jpg" alt="Jocelyn with students under a tree" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Under the shade — generations of impact gathered together</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_7.jpg" alt="Jocelyn in her white lab coat with a student, sharing cake" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Sharing a sweet moment with a student — always celebrating them</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_8.jpg" alt="Jocelyn handing an award to a student in the classroom" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Recognising excellence — presenting an award to a deserving student</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_students_9.jpg" alt="Jocelyn with a small group of students outside the school" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">With her students — a teacher who always showed up for them</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_with_teachers.jpg" alt="Jocelyn with fellow teachers and staff" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">With her dedicated colleagues — a team that shaped a school</div></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     PERSONAL
+════════════════════════════════════════ -->
+<div class="album-section album-heading" data-album="personal" style="margin-bottom:1.5rem; margin-top:2rem">
+  <div class="album-title">🌸 Personal Moments</div>
+</div>
+<div class="gallery-grid" data-album="personal">
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_on_vacation.jpg" alt="Jocelyn on vacation in a beautiful tropical garden" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">On vacation — soaking in the beauty of a well-earned rest</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_vacation_with_friend.jpg" alt="Jocelyn with a friend at a resort" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Holiday fun with a dear friend — she knows how to enjoy life!</div></div>
+  </div>
+
+  <div class="gallery-item" onclick="openLightbox(this)">
+    <img src="mum_solo_photo.jpg" alt="Jocelyn seated outdoors at night, looking elegant" loading="lazy" />
+    <div class="gallery-overlay"><div class="gallery-overlay-text">Jocelyn — effortlessly elegant, wherever she goes</div></div>
+  </div>
+
+</div>
+
+<!-- ─── LIGHTBOX ─── -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+  <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+</div>
+
+<footer>
+  <p>Celebrating <span>Jocelyn Murimi Kimemba Kirimi</span> — a life beautifully lived in service to others.</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.8rem">Retirement · 25 June 2026 &nbsp;|&nbsp; Celebration Party · 4 July 2026</p>
+</footer>
+
+<script>
+let allItems = [];
+let currentIndex = 0;
+
+function buildItemList() {
+  allItems = Array.from(document.querySelectorAll('.gallery-grid:not([style*="display: none"]) .gallery-item'));
+}
+
+function openLightbox(el) {
+  buildItemList();
+  currentIndex = allItems.indexOf(el);
+  showLightboxItem(currentIndex);
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function showLightboxItem(index) {
+  const el = allItems[index];
+  const img = el.querySelector('img');
+  const caption = el.querySelector('.gallery-overlay-text');
+  document.getElementById('lightboxImg').src = img.src;
+  document.getElementById('lightboxImg').alt = img.alt;
+  document.getElementById('lightboxCaption').textContent = caption ? caption.textContent : '';
+}
+
+function navigateLightbox(dir) {
+  currentIndex = (currentIndex + dir + allItems.length) % allItems.length;
+  showLightboxItem(currentIndex);
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeLightboxOutside(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') navigateLightbox(1);
+  if (e.key === 'ArrowLeft') navigateLightbox(-1);
+});
+
+function filterAlbum(album, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gallery-grid').forEach(grid => {
+    grid.style.display = (album === 'all' || grid.dataset.album === album) ? '' : 'none';
+  });
+  document.querySelectorAll('.album-heading').forEach(h => {
+    h.style.display = (album === 'all' || h.dataset.album === album) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
