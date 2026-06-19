@@ -17,8 +17,14 @@
   max-width: 800px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .party-details {
+    grid-template-columns: 1fr;
+  }
 }
 
 .party-detail-item {
@@ -353,7 +359,6 @@
       <div class="party-detail-icon">📍</div>
       <div class="party-detail-label">Venue</div>
       <div class="party-detail-value" style="font-size:0.85rem">Ruiru Tropical Gardens</div>
-      <div class="party-detail-sub">Ruiru Tropical Gardens</div>
     </div>
 
   </div>
@@ -490,6 +495,12 @@ const RSVP_BIN_ID     = '6a229007da38895dfe8b41a0';
 const RSVP_MASTER_KEY = '$2a$10$l9sP.C02gGu0BoE4HZaFZegQZQNvNDQ7SDmf8zfNCoHtfU6B1Ipbe';
 // ╚══════════════════════════════════════════════════════════╝
 
+// Messages bin — so RSVP notes can also appear on the Messages page
+const MESSAGES_BIN_ID     = '6a228fe0f5f4af5e29bcc8b4';
+const MESSAGES_MASTER_KEY = '$2a$10$l9sP.C02gGu0BoE4HZaFZegQZQNvNDQ7SDmf8zfNCoHtfU6B1Ipbe';
+const MESSAGES_API = `https://api.jsonbin.io/v3/b/${MESSAGES_BIN_ID}`;
+const MESSAGES_HEADERS = { 'Content-Type': 'application/json', 'X-Master-Key': MESSAGES_MASTER_KEY };
+
 const RSVP_API = `https://api.jsonbin.io/v3/b/${RSVP_BIN_ID}`;
 const RSVP_HEADERS = { 'Content-Type': 'application/json', 'X-Master-Key': RSVP_MASTER_KEY };
 
@@ -507,6 +518,45 @@ function showToast(msg) {
   t.className = 'toast error';
   t.textContent = msg;
   t.style.display = 'block';
+}
+
+// Maps RSVP relationship values to the values the Messages page expects
+function mapRelationToMessages(rel) {
+  if (rel === 'former-student') return 'student';
+  return rel; // family, colleague, friend, other already match
+}
+
+async function postNoteToMessages(name, note, relation) {
+  try {
+    const getRes = await fetch(MESSAGES_API + '/latest', { headers: MESSAGES_HEADERS });
+    if (!getRes.ok) {
+      console.error('Failed to fetch messages bin. Status:', getRes.status, await getRes.text());
+      return;
+    }
+    const getData = await getRes.json();
+    const messages = getData.record.messages || [];
+
+    messages.push({
+      author: name,
+      text: note,
+      relationship: mapRelationToMessages(relation),
+      date: new Date().toISOString()
+    });
+
+    const putRes = await fetch(MESSAGES_API, {
+      method: 'PUT',
+      headers: MESSAGES_HEADERS,
+      body: JSON.stringify({ messages })
+    });
+    if (!putRes.ok) {
+      console.error('Failed to save note to messages bin. Status:', putRes.status, await putRes.text());
+    } else {
+      console.log('Note successfully posted to Messages page.');
+    }
+  } catch (e) {
+    // Silently fail — the RSVP itself still succeeds even if this fails
+    console.error('Could not post note to Messages page:', e);
+  }
 }
 
 async function submitRSVP() {
@@ -541,6 +591,11 @@ async function submitRSVP() {
       headers: RSVP_HEADERS,
       body: JSON.stringify({ rsvps })
     });
+
+    // If they left a note, also post it to the Messages page
+    if (note && note.length > 0) {
+      await postNoteToMessages(name, note, relation);
+    }
 
     document.getElementById('rsvpFormCard').style.display = 'none';
     const ss = document.getElementById('successScreen');
